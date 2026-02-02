@@ -124,13 +124,15 @@
         }
 
         body.valentine .card {
-            background: var(--v-card-bg);
+            background: rgba(255, 248, 240, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 30px;
             box-shadow:
                 0 20px 60px rgba(230, 57, 70, 0.15),
                 0 0 0 6px var(--v-card-border),
                 0 0 0 12px var(--v-bg);
             font-family: 'Quicksand', sans-serif;
+            animation: cardGlow 3s ease-in-out infinite;
         }
 
         body.valentine .card::before {
@@ -187,6 +189,18 @@
             font-family: 'Quicksand', sans-serif;
             padding: 1rem 2.5rem;
             font-size: 1.2rem;
+            animation: btnPulseValentine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes btnPulseValentine {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 35px rgba(230, 57, 70, 0.6), 0 0 20px rgba(230, 57, 70, 0.3);
+            }
         }
 
         body.valentine .btn-yes::before {
@@ -332,10 +346,12 @@
         }
 
         body.nerd .card {
-            background: var(--n-card-bg);
+            background: rgba(40, 42, 54, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--n-card-border);
             font-family: 'Fira Code', monospace;
+            animation: cardGlowNerd 3s ease-in-out infinite;
         }
 
         body.nerd .card::before {
@@ -376,6 +392,18 @@
             font-family: 'Fira Code', monospace;
             padding: 0.75rem 1.5rem;
             font-size: 1rem;
+            animation: btnPulseNerd 2s ease-in-out infinite;
+        }
+
+        @keyframes btnPulseNerd {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(166, 227, 161, 0.3);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 4px 25px rgba(166, 227, 161, 0.5), 0 0 15px rgba(166, 227, 161, 0.2);
+            }
         }
 
         body.nerd .btn-yes::before {
@@ -523,17 +551,14 @@
 
         .floating-item {
             position: absolute;
-            opacity: 0.25;
             animation: floatUp linear infinite;
         }
 
         .floating-item.heart {
-            font-size: 2rem;
             color: #ff8fab;
         }
 
         .floating-item.code {
-            font-size: 0.85rem;
             font-family: 'Fira Code', monospace;
             color: var(--n-accent);
             white-space: nowrap;
@@ -543,11 +568,24 @@
         .floating-item.code.blue { color: var(--n-blue); }
         .floating-item.code.yellow { color: var(--n-yellow); }
 
+        /* Depth layers for floating items */
+        .floating-item.layer-back {
+            opacity: 0.12;
+            filter: blur(1px);
+        }
+        .floating-item.layer-mid {
+            opacity: 0.25;
+        }
+        .floating-item.layer-front {
+            opacity: 0.4;
+            text-shadow: 0 0 10px currentColor;
+        }
+
         @keyframes floatUp {
-            0% { transform: translateY(100vh); opacity: 0; }
-            10% { opacity: 0.25; }
-            90% { opacity: 0.25; }
-            100% { transform: translateY(-100px); opacity: 0; }
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: var(--float-opacity, 0.25); }
+            90% { opacity: var(--float-opacity, 0.25); }
+            100% { transform: translateY(-100px) rotate(var(--float-rotate, 15deg)); opacity: 0; }
         }
 
         .container {
@@ -567,6 +605,16 @@
             width: 100%;
             overflow: hidden;
             transition: all 0.5s ease;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 20px 60px rgba(230, 57, 70, 0.15), 0 0 0 6px var(--v-card-border), 0 0 0 12px var(--v-bg), 0 0 30px rgba(230, 57, 70, 0.1); }
+            50% { box-shadow: 0 20px 60px rgba(230, 57, 70, 0.25), 0 0 0 6px var(--v-card-border), 0 0 0 12px var(--v-bg), 0 0 50px rgba(230, 57, 70, 0.2); }
+        }
+
+        @keyframes cardGlowNerd {
+            0%, 100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--n-card-border), 0 0 30px rgba(203, 166, 247, 0.1); }
+            50% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--n-card-border), 0 0 50px rgba(203, 166, 247, 0.2); }
         }
 
         .terminal-header {
@@ -650,7 +698,12 @@
             transition: all 0.2s ease;
         }
 
-        .btn:hover {
+        .btn-yes:hover {
+            animation-play-state: paused;
+            transform: scale(1.08) translateY(-2px);
+        }
+
+        .btn-no:hover {
             transform: translateY(-2px);
         }
 
@@ -852,13 +905,29 @@
         }
 
         @media (max-width: 600px) {
-            .card { margin: 1rem; }
+            .card {
+                margin: 1rem;
+                max-width: 85vw;
+                transform: scale(0.9);
+                transform-origin: center center;
+            }
+            body.valentine .card {
+                background: rgba(255, 248, 240, 0.85);
+            }
+            body.nerd .card {
+                background: rgba(40, 42, 54, 0.85);
+            }
             .terminal-content { padding: 1rem; }
-            body.valentine .terminal-content { padding: 1.5rem; }
-            body.valentine .question-text { font-size: 2.2rem; }
+            body.valentine .terminal-content { padding: 1.25rem 1.5rem; }
+            body.valentine .question-text { font-size: 1.9rem; }
+            body.valentine .sub-text { font-size: 1rem; margin-bottom: 1.5rem; }
+            body.valentine .btn-yes { padding: 0.85rem 2rem; font-size: 1.1rem; }
             .buttons { flex-direction: column; align-items: flex-start; }
             body.valentine .buttons { align-items: center; }
             .theme-toggle { top: 10px; right: 10px; padding: 6px 12px; }
+            .floating-item.layer-front {
+                opacity: 0.5;
+            }
         }
     </style>
 </head>
@@ -1041,26 +1110,42 @@
         function createFloatingItems() {
             const bg = document.getElementById('floatingBg');
             const colors = ['', 'pink', 'blue', 'yellow'];
+            const layers = ['layer-back', 'layer-mid', 'layer-mid', 'layer-front']; // weighted towards mid
+            const layerOpacities = { 'layer-back': 0.12, 'layer-mid': 0.25, 'layer-front': 0.4 };
 
             function addItem() {
                 const item = document.createElement('div');
                 const isHeart = Math.random() > 0.5;
+                const layer = layers[Math.floor(Math.random() * layers.length)];
 
-                item.className = 'floating-item ' + (isHeart ? 'heart' : 'code ' + colors[Math.floor(Math.random() * colors.length)]);
+                item.className = 'floating-item ' + layer + ' ' + (isHeart ? 'heart' : 'code ' + colors[Math.floor(Math.random() * colors.length)]);
                 item.textContent = isHeart ?
                     heartItems[Math.floor(Math.random() * heartItems.length)] :
                     codeItems[Math.floor(Math.random() * codeItems.length)];
                 item.style.left = Math.random() * 100 + 'vw';
-                item.style.animationDuration = (Math.random() * 12 + 10) + 's';
+
+                // Vary size based on layer (back=smaller, front=larger)
+                const baseSize = isHeart ? 1.5 : 0.7;
+                const sizeMultiplier = layer === 'layer-back' ? 0.7 : layer === 'layer-front' ? 1.4 : 1;
+                const randomVariation = 0.8 + Math.random() * 0.4;
+                item.style.fontSize = (baseSize * sizeMultiplier * randomVariation) + 'rem';
+
+                // Speed varies by layer (back=slower, front=faster)
+                const baseSpeed = layer === 'layer-back' ? 18 : layer === 'layer-front' ? 8 : 12;
+                item.style.animationDuration = (baseSpeed + Math.random() * 8) + 's';
+
+                // Set CSS variables for animation
+                item.style.setProperty('--float-opacity', layerOpacities[layer]);
+                item.style.setProperty('--float-rotate', (Math.random() * 30 - 15) + 'deg');
 
                 bg.appendChild(item);
-                setTimeout(() => item.remove(), 22000);
+                setTimeout(() => item.remove(), 26000);
             }
 
-            for (let i = 0; i < 12; i++) {
-                setTimeout(addItem, i * 800);
+            for (let i = 0; i < 15; i++) {
+                setTimeout(addItem, i * 600);
             }
-            setInterval(addItem, 2500);
+            setInterval(addItem, 2000);
         }
 
         function initButtonPosition() {
