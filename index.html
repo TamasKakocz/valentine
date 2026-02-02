@@ -50,20 +50,10 @@
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(1);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg) scale(0.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
 
         /* Main container */
@@ -103,7 +93,6 @@
             height: 30px;
             background: var(--red-heart);
             border-radius: 50% 50% 0 0;
-            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
         }
 
         .card::after {
@@ -137,14 +126,11 @@
             font-weight: 500;
         }
 
-        /* Buttons container */
         .buttons {
             display: flex;
             gap: 2rem;
             justify-content: center;
             align-items: center;
-            position: relative;
-            min-height: 80px;
         }
 
         .btn {
@@ -156,7 +142,6 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
         }
 
         .btn-yes {
@@ -174,278 +159,602 @@
             background: linear-gradient(135deg, #ccc, #999);
             color: white;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            position: absolute;
-            z-index: 10;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* The Cat */
-        .cat-container {
             position: fixed;
-            bottom: -120px;
-            right: 50px;
-            width: 200px;
-            height: 200px;
-            z-index: 100;
-            transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+
+        .btn-no.flying {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* ============ ANIMALS CONTAINER ============ */
+        .animal-container {
+            position: fixed;
+            z-index: 9;
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s;
         }
 
-        .cat-container.active {
-            bottom: 20px;
+        .animal-container.visible {
+            opacity: 1;
         }
 
-        .cat {
-            position: relative;
-            width: 100%;
-            height: 100%;
+        /* Speech bubble for all animals */
+        .speech-bubble {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-family: 'Caveat', cursive;
+            font-size: 0.95rem;
+            color: var(--brown-warm);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            white-space: nowrap;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Cat body */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid white;
+        }
+
+        .animal-container.speaking .speech-bubble {
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* ============ CAT ============ */
+        .cat-container {
+            width: 80px;
+            height: 95px;
+        }
+
         .cat-body {
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 100px;
+            width: 50px;
+            height: 40px;
             background: linear-gradient(180deg, #ffb347, #ff9500);
-            border-radius: 60px 60px 50px 50px;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.1);
+            border-radius: 25px 25px 20px 20px;
         }
 
-        /* Cat head */
         .cat-head {
             position: absolute;
-            bottom: 80px;
+            bottom: 32px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 85px;
+            width: 44px;
+            height: 38px;
             background: linear-gradient(180deg, #ffb347, #ff9500);
-            border-radius: 50px 50px 40px 40px;
+            border-radius: 22px 22px 18px 18px;
             z-index: 2;
         }
 
-        /* Cat ears */
         .cat-ear {
             position: absolute;
-            top: -20px;
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 35px solid #ffb347;
-        }
-
-        .cat-ear.left {
-            left: 5px;
-            transform: rotate(-15deg);
-        }
-
-        .cat-ear.right {
-            right: 5px;
-            transform: rotate(15deg);
-        }
-
-        .cat-ear-inner {
-            position: absolute;
-            top: -12px;
+            top: -8px;
             width: 0;
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 20px solid #ffb5b5;
+            border-bottom: 16px solid #ffb347;
         }
+        .cat-ear.left { left: 2px; transform: rotate(-15deg); }
+        .cat-ear.right { right: 2px; transform: rotate(15deg); }
 
-        .cat-ear-inner.left {
-            left: 15px;
-            transform: rotate(-15deg);
+        .cat-ear-inner {
+            position: absolute;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid #ffb5b5;
         }
+        .cat-ear-inner.left { left: 7px; transform: rotate(-15deg); }
+        .cat-ear-inner.right { right: 7px; transform: rotate(15deg); }
 
-        .cat-ear-inner.right {
-            right: 15px;
-            transform: rotate(15deg);
-        }
-
-        /* Cat face */
         .cat-eyes {
             position: absolute;
-            top: 25px;
+            top: 11px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 25px;
+            gap: 10px;
         }
 
         .cat-eye {
-            width: 18px;
-            height: 22px;
+            width: 8px;
+            height: 10px;
             background: #333;
             border-radius: 50%;
-            position: relative;
-            animation: blink 4s infinite;
         }
 
-        .cat-eye::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        @keyframes blink {
-            0%, 95%, 100% { transform: scaleY(1); }
-            97% { transform: scaleY(0.1); }
-        }
-
-        /* Smug eyes when swatting */
         .cat-container.smug .cat-eye {
-            height: 8px;
-            border-radius: 10px 10px 50% 50%;
+            height: 4px;
+            border-radius: 4px 4px 50% 50%;
         }
 
         .cat-nose {
             position: absolute;
-            top: 50px;
+            top: 22px;
             left: 50%;
             transform: translateX(-50%);
-            width: 12px;
-            height: 10px;
+            width: 6px;
+            height: 5px;
             background: #ff6b6b;
             border-radius: 50% 50% 40% 40%;
         }
 
         .cat-mouth {
             position: absolute;
-            top: 58px;
+            top: 26px;
             left: 50%;
             transform: translateX(-50%);
-            width: 30px;
-            height: 15px;
-            border: 3px solid #333;
+            width: 14px;
+            height: 6px;
+            border: 2px solid #333;
             border-top: none;
             border-radius: 0 0 50% 50%;
             background: transparent;
         }
 
-        /* Smug smile */
         .cat-container.smug .cat-mouth {
-            width: 40px;
-            height: 8px;
-            border-radius: 0 0 100% 100%;
+            width: 18px;
+            height: 4px;
         }
 
-        .cat-whiskers {
-            position: absolute;
-            top: 52px;
-            width: 100%;
-        }
-
-        .whisker {
-            position: absolute;
-            width: 35px;
-            height: 2px;
-            background: #333;
-        }
-
-        .whisker.left-1 { left: -5px; top: 0; transform: rotate(-10deg); }
-        .whisker.left-2 { left: -8px; top: 8px; transform: rotate(5deg); }
-        .whisker.right-1 { right: -5px; top: 0; transform: rotate(10deg); }
-        .whisker.right-2 { right: -8px; top: 8px; transform: rotate(-5deg); }
-
-        /* Cat paw */
         .cat-paw {
             position: absolute;
-            bottom: 60px;
-            left: -30px;
-            width: 60px;
-            height: 35px;
+            bottom: 28px;
+            width: 40px;
+            height: 18px;
             background: linear-gradient(180deg, #ffb347, #ff9500);
             border-radius: 50%;
-            transform-origin: right center;
-            transform: rotate(20deg);
             z-index: 5;
-            transition: transform 0.2s ease-out;
         }
+        .cat-paw.left { left: -15px; transform-origin: right center; }
+        .cat-paw.right { right: -15px; transform-origin: left center; }
 
         .cat-paw::before {
             content: '';
             position: absolute;
-            bottom: 5px;
-            left: 10px;
-            width: 15px;
+            bottom: 3px;
+            width: 10px;
+            height: 10px;
+            background: #ffb5b5;
+            border-radius: 50%;
+        }
+        .cat-paw.left::before { left: 4px; }
+        .cat-paw.right::before { right: 4px; }
+
+        .cat-container.swatting .cat-paw.right {
+            animation: catSwatRight 0.35s ease-out forwards;
+        }
+        .cat-container.swatting .cat-paw.left {
+            animation: catSwatLeft 0.35s ease-out forwards;
+        }
+
+        @keyframes catSwatRight {
+            0% { transform: scaleX(0.5) translateX(0); }
+            40% { transform: scaleX(1.3) translateX(25px); }
+            100% { transform: scaleX(0.5) translateX(0); }
+        }
+        @keyframes catSwatLeft {
+            0% { transform: scaleX(0.5) translateX(0); }
+            40% { transform: scaleX(1.3) translateX(-25px); }
+            100% { transform: scaleX(0.5) translateX(0); }
+        }
+
+        /* ============ DOG ============ */
+        .dog-container {
+            width: 90px;
+            height: 90px;
+        }
+
+        .dog-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 38px;
+            background: linear-gradient(180deg, #d4a574, #b8956c);
+            border-radius: 28px 28px 20px 20px;
+        }
+
+        .dog-head {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 42px;
+            background: linear-gradient(180deg, #d4a574, #b8956c);
+            border-radius: 24px 24px 20px 20px;
+            z-index: 2;
+        }
+
+        .dog-ear {
+            position: absolute;
+            top: 5px;
+            width: 16px;
+            height: 28px;
+            background: linear-gradient(180deg, #8b6914, #6b5010);
+            border-radius: 8px 8px 12px 12px;
+        }
+        .dog-ear.left { left: -6px; transform: rotate(-10deg); }
+        .dog-ear.right { right: -6px; transform: rotate(10deg); }
+
+        .dog-eyes {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+        }
+
+        .dog-eye {
+            width: 9px;
+            height: 9px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .dog-container.happy .dog-eye {
+            height: 5px;
+            border-radius: 5px 5px 50% 50%;
+        }
+
+        .dog-snout {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
             height: 20px;
+            background: #f5dcc3;
+            border-radius: 50%;
+        }
+
+        .dog-nose {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 9px;
+            background: #333;
+            border-radius: 50% 50% 45% 45%;
+        }
+
+        .dog-tongue {
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 0;
+            background: #ff7b9c;
+            border-radius: 5px;
+            transition: height 0.2s;
+        }
+
+        .dog-container.happy .dog-tongue {
+            height: 14px;
+        }
+
+        .dog-tail {
+            position: absolute;
+            bottom: 15px;
+            right: -8px;
+            width: 20px;
+            height: 8px;
+            background: #d4a574;
+            border-radius: 10px;
+            transform-origin: left center;
+            animation: tailWag 0.15s ease-in-out infinite alternate;
+        }
+
+        @keyframes tailWag {
+            from { transform: rotate(-20deg); }
+            to { transform: rotate(20deg); }
+        }
+
+        .dog-container.bonking {
+            animation: dogBonk 0.4s ease-out forwards;
+        }
+
+        .dog-container.bonking.from-left {
+            animation: dogBonkLeft 0.4s ease-out forwards;
+        }
+
+        .dog-container.bonking.from-right {
+            animation: dogBonkRight 0.4s ease-out forwards;
+        }
+
+        @keyframes dogBonkLeft {
+            0% { transform: translateX(0); }
+            35% { transform: translateX(30px); }
+            50% { transform: translateX(35px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes dogBonkRight {
+            0% { transform: translateX(0); }
+            35% { transform: translateX(-30px); }
+            50% { transform: translateX(-35px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* ============ BUNNY ============ */
+        .bunny-container {
+            width: 70px;
+            height: 100px;
+        }
+
+        .bunny-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 40px;
+            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
+            border-radius: 50%;
+        }
+
+        .bunny-head {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 34px;
+            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .bunny-ear {
+            position: absolute;
+            top: -35px;
+            width: 14px;
+            height: 40px;
+            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
+            border-radius: 7px 7px 5px 5px;
+        }
+        .bunny-ear.left { left: 4px; transform: rotate(-10deg); }
+        .bunny-ear.right { right: 4px; transform: rotate(10deg); }
+
+        .bunny-ear-inner {
+            position: absolute;
+            top: -30px;
+            width: 8px;
+            height: 28px;
+            background: #ffb5b5;
+            border-radius: 4px;
+        }
+        .bunny-ear-inner.left { left: 7px; transform: rotate(-10deg); }
+        .bunny-ear-inner.right { right: 7px; transform: rotate(10deg); }
+
+        .bunny-eyes {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .bunny-eye {
+            width: 8px;
+            height: 10px;
+            background: #ff6b8a;
+            border-radius: 50%;
+        }
+
+        .bunny-nose {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 6px;
             background: #ffb5b5;
             border-radius: 50%;
         }
 
-        .cat-container.swatting .cat-paw {
-            animation: swat 0.4s ease-out;
-        }
-
-        @keyframes swat {
-            0% { transform: rotate(20deg); }
-            40% { transform: rotate(-45deg) translateX(-20px); }
-            100% { transform: rotate(20deg); }
-        }
-
-        /* Cat tail */
-        .cat-tail {
+        .bunny-cheek {
             position: absolute;
-            bottom: 20px;
-            right: -20px;
-            width: 80px;
-            height: 20px;
-            background: linear-gradient(90deg, #ff9500, #ffb347);
-            border-radius: 20px;
-            transform-origin: left center;
-            animation: tailWag 1s ease-in-out infinite;
+            top: 18px;
+            width: 10px;
+            height: 6px;
+            background: rgba(255, 182, 193, 0.5);
+            border-radius: 50%;
         }
+        .bunny-cheek.left { left: 2px; }
+        .bunny-cheek.right { right: 2px; }
 
-        @keyframes tailWag {
-            0%, 100% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-        }
-
-        /* Speech bubble */
-        .speech-bubble {
+        .bunny-foot {
             position: absolute;
-            top: -60px;
+            bottom: 5px;
+            width: 22px;
+            height: 12px;
+            background: #f5f5f5;
+            border-radius: 50%;
+        }
+        .bunny-foot.left { left: -5px; transform-origin: right center; }
+        .bunny-foot.right { right: -5px; transform-origin: left center; }
+
+        .bunny-container.kicking .bunny-foot.left {
+            animation: bunnyKickLeft 0.35s ease-out forwards;
+        }
+        .bunny-container.kicking .bunny-foot.right {
+            animation: bunnyKickRight 0.35s ease-out forwards;
+        }
+
+        @keyframes bunnyKickLeft {
+            0% { transform: rotate(0) translateX(0); }
+            40% { transform: rotate(-30deg) translateX(-20px); }
+            100% { transform: rotate(0) translateX(0); }
+        }
+        @keyframes bunnyKickRight {
+            0% { transform: rotate(0) translateX(0); }
+            40% { transform: rotate(30deg) translateX(20px); }
+            100% { transform: rotate(0) translateX(0); }
+        }
+
+        .bunny-container.kicking {
+            animation: bunnyHop 0.35s ease-out;
+        }
+
+        @keyframes bunnyHop {
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-15px); }
+        }
+
+        /* ============ BIRD ============ */
+        .bird-container {
+            width: 60px;
+            height: 70px;
+        }
+
+        .bird-body {
+            position: absolute;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
-            background: white;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-family: 'Caveat', cursive;
-            font-size: 1.3rem;
-            color: var(--brown-warm);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            opacity: 0;
-            transition: opacity 0.3s;
-            white-space: nowrap;
+            width: 40px;
+            height: 35px;
+            background: linear-gradient(180deg, #ff6b6b, #ee5a5a);
+            border-radius: 50% 50% 45% 45%;
         }
 
-        .speech-bubble::after {
+        .bird-head {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 28px;
+            background: linear-gradient(180deg, #ff6b6b, #ee5a5a);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .bird-eye {
+            position: absolute;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+        }
+        .bird-eye.left { left: 4px; }
+        .bird-eye.right { right: 4px; }
+
+        .bird-eye::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            top: 2px;
+            left: 2px;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .bird-beak {
+            position: absolute;
+            top: 14px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 12px solid white;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #ffa500;
         }
 
-        .cat-container.speaking .speech-bubble {
-            opacity: 1;
+        .bird-wing {
+            position: absolute;
+            bottom: 15px;
+            width: 18px;
+            height: 25px;
+            background: linear-gradient(180deg, #ff8585, #ee5a5a);
+            border-radius: 50% 50% 30% 30%;
+        }
+        .bird-wing.left { left: -5px; transform: rotate(20deg); }
+        .bird-wing.right { right: -5px; transform: rotate(-20deg); }
+
+        .bird-tail {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 15px;
+            background: linear-gradient(180deg, #ff8585, #ee5a5a);
+            border-radius: 5px 5px 50% 50%;
         }
 
-        /* Success state */
+        .bird-legs {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .bird-leg {
+            width: 3px;
+            height: 10px;
+            background: #ffa500;
+        }
+
+        .bird-container.pecking {
+            animation: birdPeck 0.3s ease-out forwards;
+        }
+
+        .bird-container.pecking.from-left {
+            transform-origin: bottom left;
+            animation: birdPeckLeft 0.3s ease-out forwards;
+        }
+
+        .bird-container.pecking.from-right {
+            transform-origin: bottom right;
+            animation: birdPeckRight 0.3s ease-out forwards;
+        }
+
+        @keyframes birdPeckLeft {
+            0% { transform: rotate(0); }
+            40% { transform: rotate(25deg) translateX(10px); }
+            60% { transform: rotate(25deg) translateX(10px); }
+            100% { transform: rotate(0); }
+        }
+
+        @keyframes birdPeckRight {
+            0% { transform: rotate(0); }
+            40% { transform: rotate(-25deg) translateX(-10px); }
+            60% { transform: rotate(-25deg) translateX(-10px); }
+            100% { transform: rotate(0); }
+        }
+
+        /* ============ SUCCESS OVERLAY ============ */
         .success-overlay {
             position: fixed;
             inset: 0;
@@ -467,14 +776,14 @@
 
         .success-text {
             font-family: 'Caveat', cursive;
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--red-heart);
             text-align: center;
             animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .success-subtext {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--brown-warm);
             margin-top: 1rem;
             animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
@@ -487,24 +796,15 @@
 
         .confetti {
             position: fixed;
-            width: 15px;
-            height: 15px;
             z-index: 1001;
             animation: confettiFall linear forwards;
         }
 
         @keyframes confettiFall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* Big hearts animation on success */
         .big-heart {
             position: fixed;
             font-size: 5rem;
@@ -515,20 +815,11 @@
         }
 
         @keyframes bigHeartFloat {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 1;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5) rotate(15deg) translateY(-200px);
-                opacity: 0;
-            }
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.5) rotate(15deg) translateY(-200px); opacity: 0; }
         }
 
-        /* Attempt counter */
         .attempt-counter {
             position: fixed;
             bottom: 20px;
@@ -538,92 +829,163 @@
             color: var(--pink-deep);
             opacity: 0.7;
         }
+
+        @media (max-width: 500px) {
+            .card { padding: 2rem; margin: 1rem; }
+            .question { font-size: 2.2rem; }
+            .success-text { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
-    <!-- Floating hearts background -->
     <div class="hearts-bg" id="heartsBg"></div>
 
-    <!-- Main container -->
     <div class="container">
         <div class="card">
             <h1 class="question">Will you be my Valentine?</h1>
             <p class="sub-text">Pretty please? 🥺</p>
             <div class="buttons">
                 <button class="btn btn-yes" onclick="sayYes()">Yes! 💕</button>
-                <button class="btn btn-no" id="noBtn">No</button>
             </div>
         </div>
     </div>
 
-    <!-- The mischievous cat -->
-    <div class="cat-container" id="cat">
-        <div class="speech-bubble" id="speechBubble">Nope!</div>
-        <div class="cat">
-            <div class="cat-tail"></div>
-            <div class="cat-body"></div>
-            <div class="cat-paw"></div>
-            <div class="cat-head">
-                <div class="cat-ear left"></div>
-                <div class="cat-ear right"></div>
-                <div class="cat-ear-inner left"></div>
-                <div class="cat-ear-inner right"></div>
-                <div class="cat-eyes">
-                    <div class="cat-eye"></div>
-                    <div class="cat-eye"></div>
-                </div>
-                <div class="cat-nose"></div>
-                <div class="cat-mouth"></div>
-                <div class="cat-whiskers">
-                    <div class="whisker left-1"></div>
-                    <div class="whisker left-2"></div>
-                    <div class="whisker right-1"></div>
-                    <div class="whisker right-2"></div>
-                </div>
+    <button class="btn btn-no" id="noBtn">No</button>
+
+    <!-- CAT -->
+    <div class="animal-container cat-container" id="cat">
+        <div class="speech-bubble"></div>
+        <div class="cat-body"></div>
+        <div class="cat-paw left"></div>
+        <div class="cat-paw right"></div>
+        <div class="cat-head">
+            <div class="cat-ear left"></div>
+            <div class="cat-ear right"></div>
+            <div class="cat-ear-inner left"></div>
+            <div class="cat-ear-inner right"></div>
+            <div class="cat-eyes">
+                <div class="cat-eye"></div>
+                <div class="cat-eye"></div>
             </div>
+            <div class="cat-nose"></div>
+            <div class="cat-mouth"></div>
         </div>
     </div>
 
-    <!-- Success overlay -->
+    <!-- DOG -->
+    <div class="animal-container dog-container" id="dog">
+        <div class="speech-bubble"></div>
+        <div class="dog-body"></div>
+        <div class="dog-tail"></div>
+        <div class="dog-head">
+            <div class="dog-ear left"></div>
+            <div class="dog-ear right"></div>
+            <div class="dog-eyes">
+                <div class="dog-eye"></div>
+                <div class="dog-eye"></div>
+            </div>
+            <div class="dog-snout"></div>
+            <div class="dog-nose"></div>
+            <div class="dog-tongue"></div>
+        </div>
+    </div>
+
+    <!-- BUNNY -->
+    <div class="animal-container bunny-container" id="bunny">
+        <div class="speech-bubble"></div>
+        <div class="bunny-body"></div>
+        <div class="bunny-foot left"></div>
+        <div class="bunny-foot right"></div>
+        <div class="bunny-head">
+            <div class="bunny-ear left"></div>
+            <div class="bunny-ear right"></div>
+            <div class="bunny-ear-inner left"></div>
+            <div class="bunny-ear-inner right"></div>
+            <div class="bunny-eyes">
+                <div class="bunny-eye"></div>
+                <div class="bunny-eye"></div>
+            </div>
+            <div class="bunny-cheek left"></div>
+            <div class="bunny-cheek right"></div>
+            <div class="bunny-nose"></div>
+        </div>
+    </div>
+
+    <!-- BIRD -->
+    <div class="animal-container bird-container" id="bird">
+        <div class="speech-bubble"></div>
+        <div class="bird-body"></div>
+        <div class="bird-wing left"></div>
+        <div class="bird-wing right"></div>
+        <div class="bird-tail"></div>
+        <div class="bird-head">
+            <div class="bird-eye left"></div>
+            <div class="bird-eye right"></div>
+            <div class="bird-beak"></div>
+        </div>
+        <div class="bird-legs">
+            <div class="bird-leg"></div>
+            <div class="bird-leg"></div>
+        </div>
+    </div>
+
     <div class="success-overlay" id="successOverlay">
         <div class="success-text">Yay! I knew you'd say yes! 💖</div>
         <div class="success-subtext">Happy Valentine's Day, my love!</div>
     </div>
 
-    <!-- Attempt counter -->
     <div class="attempt-counter" id="attemptCounter"></div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
-        const cat = document.getElementById('cat');
-        const speechBubble = document.getElementById('speechBubble');
         const attemptCounter = document.getElementById('attemptCounter');
+
+        const animals = {
+            cat: {
+                el: document.getElementById('cat'),
+                phrases: ["Nope!", "*swat*", "Hehe! 😼", "Try again!", "My paw says no!"],
+                width: 80,
+                height: 95
+            },
+            dog: {
+                el: document.getElementById('dog'),
+                phrases: ["Boop!", "Woof! 🐕", "Nuh-uh!", "*bonk*", "Good try!"],
+                width: 90,
+                height: 90
+            },
+            bunny: {
+                el: document.getElementById('bunny'),
+                phrases: ["*kick*", "Nope! 🐰", "Hop away!", "Not today!", "Boing!"],
+                width: 70,
+                height: 100
+            },
+            bird: {
+                el: document.getElementById('bird'),
+                phrases: ["*peck*", "Chirp! 🐦", "Tweet NO!", "Fly away!", "Nope nope!"],
+                width: 60,
+                height: 70
+            }
+        };
 
         let attempts = 0;
         let isAnimating = false;
+        let currentX, currentY;
+        let lastAnimal = null;
 
-        const catPhrases = [
-            "Nope!",
-            "Not allowed!",
-            "Try again! 😼",
-            "Nice try!",
-            "Hehe!",
-            "Wrong button!",
-            "Pick the other one!",
-            "I said NO! 🐱",
-            "Keep trying! 😸",
-            "Just say yes!",
-            "The answer is YES!",
-            "My paw says no!",
-            "Denied! 😹"
-        ];
+        function initButtonPosition() {
+            const yesBtn = document.querySelector('.btn-yes');
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+            currentX = yesBtnRect.right + 30;
+            currentY = yesBtnRect.top;
+            noBtn.style.left = currentX + 'px';
+            noBtn.style.top = currentY + 'px';
+        }
 
-        // Create floating hearts
         function createFloatingHearts() {
             const heartsBg = document.getElementById('heartsBg');
             const hearts = ['♥', '♡', '❤', '💕', '💗'];
 
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 12; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.className = 'floating-heart';
@@ -633,13 +995,10 @@
                     heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
                     heart.style.animationDelay = (Math.random() * 5) + 's';
                     heartsBg.appendChild(heart);
-
-                    // Remove after animation
                     setTimeout(() => heart.remove(), 20000);
-                }, i * 500);
+                }, i * 700);
             }
 
-            // Keep creating hearts
             setInterval(() => {
                 const heart = document.createElement('div');
                 heart.className = 'floating-heart';
@@ -649,82 +1008,170 @@
                 heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
                 heartsBg.appendChild(heart);
                 setTimeout(() => heart.remove(), 20000);
-            }, 2000);
+            }, 3000);
         }
 
-        // Move the No button away
+        function getRandomAnimal() {
+            const animalKeys = Object.keys(animals);
+            let choice;
+            do {
+                choice = animalKeys[Math.floor(Math.random() * animalKeys.length)];
+            } while (choice === lastAnimal && animalKeys.length > 1);
+            lastAnimal = choice;
+            return choice;
+        }
+
         function moveNoButton() {
             if (isAnimating) return;
             isAnimating = true;
             attempts++;
 
-            // Show cat
-            cat.classList.add('active');
+            const btnRect = noBtn.getBoundingClientRect();
+            const animalType = getRandomAnimal();
+            const animal = animals[animalType];
+            const animalEl = animal.el;
+            const speechBubble = animalEl.querySelector('.speech-bubble');
 
-            // Cat swats
+            // Random direction
+            const pushToRight = Math.random() > 0.5;
+
+            // Position animal next to button
+            let animalX, animalY;
+
+            if (animalType === 'cat') {
+                animalX = pushToRight ? btnRect.left - 55 : btnRect.right - 25;
+                animalY = btnRect.top - 20;
+            } else if (animalType === 'dog') {
+                animalX = pushToRight ? btnRect.left - 65 : btnRect.right - 25;
+                animalY = btnRect.top - 15;
+            } else if (animalType === 'bunny') {
+                animalX = pushToRight ? btnRect.left - 50 : btnRect.right - 20;
+                animalY = btnRect.top - 25;
+            } else if (animalType === 'bird') {
+                animalX = pushToRight ? btnRect.left - 45 : btnRect.right - 15;
+                animalY = btnRect.top - 20;
+            }
+
+            animalEl.style.left = animalX + 'px';
+            animalEl.style.top = animalY + 'px';
+
+            // Show animal
+            animalEl.classList.add('visible');
+
+            // Set direction class
+            animalEl.classList.remove('from-left', 'from-right');
+            animalEl.classList.add(pushToRight ? 'from-left' : 'from-right');
+
+            // Configure paws/direction for cat
+            if (animalType === 'cat') {
+                const leftPaw = animalEl.querySelector('.cat-paw.left');
+                const rightPaw = animalEl.querySelector('.cat-paw.right');
+                if (pushToRight) {
+                    rightPaw.style.display = 'block';
+                    leftPaw.style.display = 'none';
+                } else {
+                    leftPaw.style.display = 'block';
+                    rightPaw.style.display = 'none';
+                }
+            }
+
+            // Configure feet for bunny
+            if (animalType === 'bunny') {
+                const leftFoot = animalEl.querySelector('.bunny-foot.left');
+                const rightFoot = animalEl.querySelector('.bunny-foot.right');
+                if (pushToRight) {
+                    rightFoot.style.display = 'block';
+                    leftFoot.style.display = 'none';
+                } else {
+                    leftFoot.style.display = 'block';
+                    rightFoot.style.display = 'none';
+                }
+            }
+
+            // Start animation after brief appearance
             setTimeout(() => {
-                cat.classList.add('swatting');
-                cat.classList.add('smug');
+                // Add action class based on animal
+                if (animalType === 'cat') {
+                    animalEl.classList.add('swatting', 'smug');
+                } else if (animalType === 'dog') {
+                    animalEl.classList.add('bonking', 'happy');
+                } else if (animalType === 'bunny') {
+                    animalEl.classList.add('kicking');
+                } else if (animalType === 'bird') {
+                    animalEl.classList.add('pecking');
+                }
 
                 // Show speech bubble
-                cat.classList.add('speaking');
-                speechBubble.textContent = catPhrases[Math.floor(Math.random() * catPhrases.length)];
-            }, 200);
+                animalEl.classList.add('speaking');
+                speechBubble.textContent = animal.phrases[Math.floor(Math.random() * animal.phrases.length)];
+            }, 80);
 
-            // Move button to random position
+            // Move button when animal "hits" it
             setTimeout(() => {
-                const card = document.querySelector('.card');
-                const cardRect = card.getBoundingClientRect();
-                const btnRect = noBtn.getBoundingClientRect();
+                const minDistance = 200;
+                const maxDistance = 400;
+                const distance = minDistance + Math.random() * (maxDistance - minDistance);
 
-                // Calculate new random position within the card
-                const maxX = cardRect.width - btnRect.width - 40;
-                const maxY = 150;
+                const horizontalPush = pushToRight ? distance : -distance;
+                const verticalPush = (Math.random() - 0.5) * 350;
 
-                const newX = Math.random() * maxX - maxX/2;
-                const newY = Math.random() * maxY - 30;
+                let newX = currentX + horizontalPush;
+                let newY = currentY + verticalPush;
 
-                noBtn.style.transform = `translate(${newX}px, ${newY}px) rotate(${Math.random() * 20 - 10}deg)`;
-            }, 350);
+                const padding = 30;
+                newX = Math.max(padding, Math.min(window.innerWidth - btnRect.width - padding, newX));
+                newY = Math.max(padding, Math.min(window.innerHeight - btnRect.height - padding, newY));
 
-            // Update counter
+                // Avoid Yes button
+                const yesBtn = document.querySelector('.btn-yes');
+                const yesBtnRect = yesBtn.getBoundingClientRect();
+                if (newX > yesBtnRect.left - 60 && newX < yesBtnRect.right + 60 &&
+                    newY > yesBtnRect.top - 60 && newY < yesBtnRect.bottom + 60) {
+                    if (pushToRight) {
+                        newX = yesBtnRect.right + 70;
+                    } else {
+                        newX = yesBtnRect.left - btnRect.width - 70;
+                    }
+                    newX = Math.max(padding, Math.min(window.innerWidth - btnRect.width - padding, newX));
+                }
+
+                currentX = newX;
+                currentY = newY;
+
+                noBtn.classList.add('flying');
+                noBtn.style.left = newX + 'px';
+                noBtn.style.top = newY + 'px';
+                noBtn.style.transform = `rotate(${(pushToRight ? 1 : -1) * (Math.random() * 25 + 5)}deg)`;
+            }, 180);
+
             if (attempts > 2) {
                 attemptCounter.textContent = `Attempts to say no: ${attempts} 😅`;
             }
 
-            // Reset cat animation
+            // Cleanup
             setTimeout(() => {
-                cat.classList.remove('swatting');
-            }, 600);
+                animalEl.classList.remove('swatting', 'smug', 'bonking', 'happy', 'kicking', 'pecking');
+                noBtn.classList.remove('flying');
+            }, 450);
 
             setTimeout(() => {
-                cat.classList.remove('speaking');
-                cat.classList.remove('smug');
-            }, 1500);
+                animalEl.classList.remove('speaking');
+            }, 900);
 
             setTimeout(() => {
-                cat.classList.remove('active');
+                animalEl.classList.remove('visible', 'from-left', 'from-right');
                 isAnimating = false;
-            }, 2000);
+            }, 1000);
         }
 
-        // Listen for hover/touch on No button
         noBtn.addEventListener('mouseenter', moveNoButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveNoButton();
-        });
-        noBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            moveNoButton();
-        });
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); });
+        noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNoButton(); });
 
-        // Yes button - celebration!
         function sayYes() {
             const overlay = document.getElementById('successOverlay');
             overlay.classList.add('active');
 
-            // Create confetti
             const colors = ['#ff8fab', '#e63946', '#ffc2d1', '#ff6b6b', '#ffb347', '#ffd700'];
             for (let i = 0; i < 100; i++) {
                 setTimeout(() => {
@@ -741,7 +1188,6 @@
                 }, i * 30);
             }
 
-            // Create big floating hearts
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
@@ -750,15 +1196,17 @@
                     heart.style.left = Math.random() * 80 + 10 + 'vw';
                     heart.style.top = Math.random() * 50 + 30 + 'vh';
                     heart.style.fontSize = (Math.random() * 3 + 3) + 'rem';
-                    heart.style.animationDelay = (Math.random() * 0.5) + 's';
                     document.body.appendChild(heart);
                     setTimeout(() => heart.remove(), 2500);
                 }, i * 150);
             }
         }
 
-        // Initialize
-        createFloatingHearts();
+        window.addEventListener('load', () => {
+            initButtonPosition();
+            createFloatingHearts();
+        });
+        window.addEventListener('resize', initButtonPosition);
     </script>
 </body>
 </html>
