@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Very Important Question 💕</title>
+    <title>Will you be my Valentine?</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,25 +15,505 @@
         }
 
         :root {
-            --pink-soft: #fef1f3;
-            --pink-medium: #ffc2d1;
-            --pink-deep: #ff8fab;
-            --red-heart: #e63946;
-            --red-dark: #c1121f;
-            --cream: #fff8f0;
-            --brown-warm: #6d4c41;
+            /* Valentine Theme */
+            --v-bg: #fef1f3;
+            --v-card-bg: #fff8f0;
+            --v-card-border: #ffc2d1;
+            --v-text: #6d4c41;
+            --v-text-dim: #ff8fab;
+            --v-accent: #e63946;
+            --v-accent2: #c1121f;
+            --v-highlight: #ffc2d1;
+
+            /* Nerd Theme */
+            --n-bg: #1e1e2e;
+            --n-card-bg: #282a36;
+            --n-card-border: #313244;
+            --n-text: #cdd6f4;
+            --n-text-dim: #6c7086;
+            --n-accent: #a6e3a1;
+            --n-accent2: #f38ba8;
+            --n-highlight: #f5c2e7;
+            --n-keyword: #cba6f7;
+            --n-string: #a6e3a1;
+            --n-comment: #6272a4;
+            --n-teal: #94e2d5;
+            --n-blue: #89b4fa;
+            --n-yellow: #f9e2af;
+            --n-orange: #fab387;
         }
 
         body {
             min-height: 100vh;
-            background: var(--pink-soft);
             font-family: 'Quicksand', sans-serif;
             overflow: hidden;
             position: relative;
+            transition: background 0.5s ease;
         }
 
-        /* Floating hearts background */
-        .hearts-bg {
+        /* ============ THEME TOGGLE ============ */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .toggle-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: #ccc;
+            border-radius: 13px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Valentine Theme Styles */
+        body.valentine {
+            background: var(--v-bg);
+        }
+
+        body.valentine .theme-toggle {
+            background: rgba(255,192,203,0.3);
+            border-color: var(--v-highlight);
+        }
+
+        body.valentine .toggle-label {
+            color: var(--v-text);
+        }
+
+        body.valentine .toggle-switch {
+            background: var(--v-highlight);
+        }
+
+        body.valentine .card {
+            background: var(--v-card-bg);
+            border-radius: 30px;
+            box-shadow:
+                0 20px 60px rgba(230, 57, 70, 0.15),
+                0 0 0 6px var(--v-card-border),
+                0 0 0 12px var(--v-bg);
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body.valentine .card::before {
+            content: '♥';
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            color: var(--v-accent);
+            animation: heartBeat 1s ease-in-out infinite;
+        }
+
+        body.valentine .terminal-header {
+            display: none;
+        }
+
+        body.valentine .terminal-content {
+            padding: 2.5rem 3rem;
+            text-align: center;
+        }
+
+        body.valentine .code-display {
+            display: none;
+        }
+
+        body.valentine .valentine-display {
+            display: block;
+        }
+
+        body.valentine .question-text {
+            font-family: 'Caveat', cursive;
+            font-size: 3rem;
+            color: var(--v-text);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        body.valentine .sub-text {
+            font-size: 1.1rem;
+            color: var(--v-text-dim);
+            margin-bottom: 2rem;
+        }
+
+        body.valentine .buttons {
+            justify-content: center;
+            padding-left: 0;
+        }
+
+        body.valentine .btn-yes {
+            background: linear-gradient(135deg, var(--v-accent), var(--v-accent2));
+            color: white;
+            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
+            font-family: 'Quicksand', sans-serif;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+        }
+
+        body.valentine .btn-yes::before {
+            content: '';
+        }
+
+        body.valentine .btn-yes-text::before {
+            content: 'Yes! 💕';
+        }
+
+        body.valentine .btn-yes-text-nerd {
+            display: none;
+        }
+
+        body.valentine .btn-no {
+            background: linear-gradient(135deg, #ccc, #999);
+            color: white;
+            border: none;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body.valentine .btn-no-text::before {
+            content: 'No';
+        }
+
+        body.valentine .floating-item.heart {
+            display: block;
+        }
+
+        body.valentine .floating-item.code {
+            display: none;
+        }
+
+        body.valentine .attempt-counter {
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--v-text-dim);
+        }
+
+        body.valentine .attempt-counter::before {
+            content: 'Attempts to say no: ';
+        }
+
+        body.valentine .attempt-counter::after {
+            content: ' 😅';
+        }
+
+        body.valentine .success-overlay {
+            background: rgba(254, 241, 243, 0.95);
+        }
+
+        body.valentine .success-text {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            color: var(--v-accent);
+        }
+
+        body.valentine .success-text::before {
+            content: 'Yay! I knew you\'d say yes! 💖';
+        }
+
+        body.valentine .success-text-nerd {
+            display: none;
+        }
+
+        body.valentine .success-subtext {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--v-text);
+        }
+
+        body.valentine .success-subtext::before {
+            content: 'Happy Valentine\'s Day, my love!';
+        }
+
+        body.valentine .success-code {
+            display: none;
+        }
+
+        body.valentine .speech-bubble {
+            background: white;
+            border: none;
+            color: var(--v-text);
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+        }
+
+        body.valentine .speech-bubble::after {
+            border-top-color: white;
+        }
+
+        /* Animal colors for Valentine */
+        body.valentine .cat-body,
+        body.valentine .cat-head {
+            background: linear-gradient(180deg, #ffb347, #ff9500);
+            border: none;
+        }
+        body.valentine .cat-ear { border-bottom-color: #ffb347; }
+        body.valentine .cat-eye { background: #333; box-shadow: none; }
+        body.valentine .cat-paw { background: linear-gradient(180deg, #ffb347, #ff9500); border: none; }
+
+        body.valentine .dog-body,
+        body.valentine .dog-head {
+            background: linear-gradient(180deg, #d4a574, #b8956c);
+            border: none;
+        }
+        body.valentine .dog-ear { background: #8b6914; border: none; }
+
+        body.valentine .bunny-body,
+        body.valentine .bunny-head,
+        body.valentine .bunny-ear {
+            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
+            border: none;
+        }
+        body.valentine .bunny-foot { background: #f5f5f5; border: none; }
+
+        body.valentine .bird-body,
+        body.valentine .bird-head,
+        body.valentine .bird-wing {
+            background: linear-gradient(180deg, #ff6b6b, #ee5a5a);
+            border: none;
+        }
+
+        /* Nerd Theme Styles */
+        body.nerd {
+            background: var(--n-bg);
+        }
+
+        body.nerd .theme-toggle {
+            background: rgba(49, 50, 68, 0.8);
+            border-color: var(--n-card-border);
+        }
+
+        body.nerd .toggle-label {
+            color: var(--n-text);
+        }
+
+        body.nerd .toggle-switch {
+            background: var(--n-keyword);
+        }
+
+        body.nerd .toggle-switch::after {
+            transform: translateX(24px);
+        }
+
+        body.nerd .card {
+            background: var(--n-card-bg);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--n-card-border);
+            font-family: 'Fira Code', monospace;
+        }
+
+        body.nerd .card::before {
+            display: none;
+        }
+
+        body.nerd .terminal-header {
+            display: flex;
+            background: var(--n-card-border);
+            padding: 12px 16px;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.nerd .terminal-content {
+            padding: 1.5rem 2rem 2rem;
+            text-align: left;
+        }
+
+        body.nerd .code-display {
+            display: block;
+        }
+
+        body.nerd .valentine-display {
+            display: none;
+        }
+
+        body.nerd .buttons {
+            padding-left: 36px;
+            justify-content: flex-start;
+        }
+
+        body.nerd .btn-yes {
+            background: var(--n-accent);
+            color: var(--n-bg);
+            box-shadow: 0 4px 15px rgba(166, 227, 161, 0.3);
+            font-family: 'Fira Code', monospace;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        body.nerd .btn-yes::before {
+            content: '> ';
+            opacity: 0.7;
+        }
+
+        body.nerd .btn-yes-text::before {
+            content: '<Yes />';
+        }
+
+        body.nerd .btn-no {
+            background: var(--n-card-border);
+            color: var(--n-accent2);
+            border: 1px solid var(--n-accent2);
+            font-family: 'Fira Code', monospace;
+        }
+
+        body.nerd .btn-no::before {
+            content: '× ';
+        }
+
+        body.nerd .btn-no-text::before {
+            content: '<No />';
+        }
+
+        body.nerd .floating-item.heart {
+            display: none;
+        }
+
+        body.nerd .floating-item.code {
+            display: block;
+        }
+
+        body.nerd .attempt-counter {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--n-comment);
+        }
+
+        body.nerd .attempt-counter::before {
+            content: '// attempts: ';
+        }
+
+        body.nerd .attempt-counter::after {
+            content: ' // nice try';
+        }
+
+        body.nerd .success-overlay {
+            background: rgba(30, 30, 46, 0.98);
+        }
+
+        body.nerd .success-text {
+            font-family: 'Fira Code', monospace;
+            font-size: 2rem;
+            color: var(--n-accent);
+        }
+
+        body.nerd .success-text::before {
+            content: '<Success status="YES!" /> 🎉';
+        }
+
+        body.nerd .success-subtext {
+            font-family: 'Fira Code', monospace;
+            color: var(--n-highlight);
+        }
+
+        body.nerd .success-subtext::before {
+            content: '// Happy Valentine\'s Day, my love!';
+        }
+
+        body.nerd .success-code {
+            display: block;
+        }
+
+        body.nerd .speech-bubble {
+            background: var(--n-card-bg);
+            border: 1px solid var(--n-highlight);
+            color: var(--n-highlight);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+        }
+
+        body.nerd .speech-bubble::after {
+            border-top-color: var(--n-highlight);
+        }
+
+        /* Animal colors for Nerd */
+        body.nerd .cat-body,
+        body.nerd .cat-head {
+            background: linear-gradient(180deg, #6c7086, #585b70);
+            border: 2px solid var(--n-keyword);
+        }
+        body.nerd .cat-ear { border-bottom-color: #6c7086; }
+        body.nerd .cat-ear-inner { border-bottom-color: var(--n-highlight); }
+        body.nerd .cat-eye { background: var(--n-accent); box-shadow: 0 0 8px var(--n-accent); }
+        body.nerd .cat-nose { background: var(--n-highlight); }
+        body.nerd .cat-mouth { border-color: var(--n-highlight); }
+        body.nerd .cat-paw { background: linear-gradient(180deg, #6c7086, #585b70); border: 2px solid var(--n-keyword); }
+
+        body.nerd .dog-body,
+        body.nerd .dog-head {
+            background: linear-gradient(180deg, var(--n-yellow), var(--n-orange));
+            border: 2px solid var(--n-orange);
+        }
+        body.nerd .dog-ear { background: var(--n-orange); border: 2px solid #e07628; }
+        body.nerd .dog-eye { background: var(--n-bg); }
+        body.nerd .dog-tongue { background: var(--n-accent2); }
+
+        body.nerd .bunny-body,
+        body.nerd .bunny-head,
+        body.nerd .bunny-ear {
+            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
+            border: 2px solid var(--n-text-dim);
+        }
+        body.nerd .bunny-ear-inner { background: var(--n-highlight); }
+        body.nerd .bunny-eye { background: var(--n-accent2); }
+        body.nerd .bunny-foot { background: #f5f5f5; border: 2px solid var(--n-text-dim); }
+
+        body.nerd .bird-body,
+        body.nerd .bird-head {
+            background: linear-gradient(180deg, var(--n-blue), #74a8f7);
+            border: 2px solid #5a96f5;
+        }
+        body.nerd .bird-wing {
+            background: linear-gradient(180deg, #9fc5fa, var(--n-blue));
+            border: 2px solid #5a96f5;
+        }
+        body.nerd .bird-beak { border-top-color: var(--n-yellow); }
+        body.nerd .bird-leg { background: var(--n-yellow); }
+
+        /* ============ SHARED STYLES ============ */
+        @keyframes heartBeat {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.15); }
+        }
+
+        .floating-bg {
             position: fixed;
             inset: 0;
             pointer-events: none;
@@ -41,22 +521,35 @@
             z-index: 0;
         }
 
-        .floating-heart {
+        .floating-item {
             position: absolute;
-            font-size: 2rem;
-            opacity: 0.3;
+            opacity: 0.25;
             animation: floatUp linear infinite;
-            color: var(--pink-deep);
         }
+
+        .floating-item.heart {
+            font-size: 2rem;
+            color: #ff8fab;
+        }
+
+        .floating-item.code {
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+            color: var(--n-accent);
+            white-space: nowrap;
+        }
+
+        .floating-item.code.pink { color: var(--n-highlight); }
+        .floating-item.code.blue { color: var(--n-blue); }
+        .floating-item.code.yellow { color: var(--n-yellow); }
 
         @keyframes floatUp {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(100vh); opacity: 0; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
+            100% { transform: translateY(-100px); opacity: 0; }
         }
 
-        /* Main container */
         .container {
             min-height: 100vh;
             display: flex;
@@ -68,106 +561,111 @@
             z-index: 1;
         }
 
-        /* Valentine card */
         .card {
-            background: var(--cream);
-            border-radius: 30px;
-            padding: 3rem 4rem;
-            box-shadow:
-                0 20px 60px rgba(230, 57, 70, 0.15),
-                0 0 0 6px var(--pink-medium),
-                0 0 0 12px var(--pink-soft);
-            text-align: center;
             position: relative;
-            max-width: 500px;
-            transform: rotate(-1deg);
+            max-width: 560px;
+            width: 100%;
+            overflow: hidden;
+            transition: all 0.5s ease;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 30px;
-            background: var(--red-heart);
-            border-radius: 50% 50% 0 0;
+        .terminal-header {
+            align-items: center;
+            gap: 8px;
         }
 
-        .card::after {
-            content: '♥';
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.5rem;
-            color: var(--red-heart);
-            animation: heartBeat 1s ease-in-out infinite;
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .terminal-btn.red { background: #ff5f56; }
+        .terminal-btn.yellow { background: #ffbd2e; }
+        .terminal-btn.green { background: #27ca40; }
+
+        .terminal-title {
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--n-text-dim);
+            font-size: 0.8rem;
         }
 
-        @keyframes heartBeat {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.15); }
-        }
-
-        .question {
-            font-family: 'Caveat', cursive;
-            font-size: 3rem;
-            color: var(--brown-warm);
+        .code-line {
             margin-bottom: 0.5rem;
-            line-height: 1.2;
+            line-height: 1.6;
+            color: var(--n-text);
         }
 
-        .sub-text {
+        .line-number {
+            color: var(--n-text-dim);
+            margin-right: 1.5rem;
+            user-select: none;
+            display: inline-block;
+            width: 20px;
+            text-align: right;
+        }
+
+        .keyword { color: var(--n-keyword); }
+        .function { color: var(--n-blue); }
+        .string { color: var(--n-string); }
+        .operator { color: var(--n-teal); }
+        .comment { color: var(--n-comment); font-style: italic; }
+        .heart-icon { color: var(--n-accent2); }
+
+        .question-line {
             font-size: 1.1rem;
-            color: var(--pink-deep);
-            margin-bottom: 2.5rem;
-            font-weight: 500;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(245, 194, 231, 0.1);
+            border-left: 3px solid var(--n-highlight);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--n-text);
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
         }
 
         .buttons {
             display: flex;
-            gap: 2rem;
-            justify-content: center;
-            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
         }
 
         .btn {
-            padding: 1rem 2.5rem;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.2rem;
             font-weight: 600;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.2s ease;
         }
 
-        .btn-yes {
-            background: linear-gradient(135deg, var(--red-heart), var(--red-dark));
-            color: white;
-            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
-        }
-
-        .btn-yes:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 35px rgba(230, 57, 70, 0.5);
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
         .btn-no {
-            background: linear-gradient(135deg, #ccc, #999);
-            color: white;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             position: fixed;
             z-index: 10;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
         }
 
         .btn-no.flying {
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* ============ ANIMALS CONTAINER ============ */
+        /* ============ ANIMALS ============ */
         .animal-container {
             position: fixed;
             z-index: 9;
@@ -176,23 +674,16 @@
             transition: opacity 0.1s;
         }
 
-        .animal-container.visible {
-            opacity: 1;
-        }
+        .animal-container.visible { opacity: 1; }
 
-        /* Speech bubble for all animals */
         .speech-bubble {
             position: absolute;
-            top: -30px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%) scale(0);
-            background: white;
             padding: 5px 10px;
-            border-radius: 12px;
-            font-family: 'Caveat', cursive;
-            font-size: 0.95rem;
-            color: var(--brown-warm);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
             white-space: nowrap;
             transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -200,565 +691,116 @@
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -6px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid white;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid;
         }
 
         .animal-container.speaking .speech-bubble {
             transform: translateX(-50%) scale(1);
         }
 
-        /* ============ CAT ============ */
-        .cat-container {
-            width: 80px;
-            height: 95px;
-        }
-
-        .cat-body {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 40px;
-            background: linear-gradient(180deg, #ffb347, #ff9500);
-            border-radius: 25px 25px 20px 20px;
-        }
-
-        .cat-head {
-            position: absolute;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 44px;
-            height: 38px;
-            background: linear-gradient(180deg, #ffb347, #ff9500);
-            border-radius: 22px 22px 18px 18px;
-            z-index: 2;
-        }
-
-        .cat-ear {
-            position: absolute;
-            top: -8px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 16px solid #ffb347;
-        }
+        /* Cat */
+        .cat-container { width: 80px; height: 95px; }
+        .cat-body { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 50px; height: 40px; border-radius: 25px 25px 20px 20px; }
+        .cat-head { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); width: 44px; height: 38px; border-radius: 22px 22px 18px 18px; z-index: 2; }
+        .cat-ear { position: absolute; top: -8px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 16px solid; }
         .cat-ear.left { left: 2px; transform: rotate(-15deg); }
         .cat-ear.right { right: 2px; transform: rotate(15deg); }
-
-        .cat-ear-inner {
-            position: absolute;
-            top: -4px;
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 10px solid #ffb5b5;
-        }
+        .cat-ear-inner { position: absolute; top: -4px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid #ffb5b5; }
         .cat-ear-inner.left { left: 7px; transform: rotate(-15deg); }
         .cat-ear-inner.right { right: 7px; transform: rotate(15deg); }
-
-        .cat-eyes {
-            position: absolute;
-            top: 11px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .cat-eye {
-            width: 8px;
-            height: 10px;
-            background: #333;
-            border-radius: 50%;
-        }
-
-        .cat-container.smug .cat-eye {
-            height: 4px;
-            border-radius: 4px 4px 50% 50%;
-        }
-
-        .cat-nose {
-            position: absolute;
-            top: 22px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 5px;
-            background: #ff6b6b;
-            border-radius: 50% 50% 40% 40%;
-        }
-
-        .cat-mouth {
-            position: absolute;
-            top: 26px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 14px;
-            height: 6px;
-            border: 2px solid #333;
-            border-top: none;
-            border-radius: 0 0 50% 50%;
-            background: transparent;
-        }
-
-        .cat-container.smug .cat-mouth {
-            width: 18px;
-            height: 4px;
-        }
-
-        .cat-paw {
-            position: absolute;
-            bottom: 28px;
-            width: 40px;
-            height: 18px;
-            background: linear-gradient(180deg, #ffb347, #ff9500);
-            border-radius: 50%;
-            z-index: 5;
-        }
+        .cat-eyes { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .cat-eye { width: 8px; height: 10px; border-radius: 50%; }
+        .cat-container.smug .cat-eye { height: 4px; border-radius: 4px 4px 50% 50%; }
+        .cat-nose { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 6px; height: 5px; background: #ff6b6b; border-radius: 50% 50% 40% 40%; }
+        .cat-mouth { position: absolute; top: 26px; left: 50%; transform: translateX(-50%); width: 14px; height: 6px; border: 2px solid #333; border-top: none; border-radius: 0 0 50% 50%; background: transparent; }
+        .cat-paw { position: absolute; bottom: 28px; width: 40px; height: 18px; border-radius: 50%; z-index: 5; }
         .cat-paw.left { left: -15px; transform-origin: right center; }
         .cat-paw.right { right: -15px; transform-origin: left center; }
+        .cat-container.swatting .cat-paw.right { animation: catSwatRight 0.35s ease-out forwards; }
+        .cat-container.swatting .cat-paw.left { animation: catSwatLeft 0.35s ease-out forwards; }
 
-        .cat-paw::before {
-            content: '';
-            position: absolute;
-            bottom: 3px;
-            width: 10px;
-            height: 10px;
-            background: #ffb5b5;
-            border-radius: 50%;
-        }
-        .cat-paw.left::before { left: 4px; }
-        .cat-paw.right::before { right: 4px; }
+        @keyframes catSwatRight { 0% { transform: scaleX(0.5) translateX(0); } 40% { transform: scaleX(1.3) translateX(25px); } 100% { transform: scaleX(0.5) translateX(0); } }
+        @keyframes catSwatLeft { 0% { transform: scaleX(0.5) translateX(0); } 40% { transform: scaleX(1.3) translateX(-25px); } 100% { transform: scaleX(0.5) translateX(0); } }
 
-        .cat-container.swatting .cat-paw.right {
-            animation: catSwatRight 0.35s ease-out forwards;
-        }
-        .cat-container.swatting .cat-paw.left {
-            animation: catSwatLeft 0.35s ease-out forwards;
-        }
-
-        @keyframes catSwatRight {
-            0% { transform: scaleX(0.5) translateX(0); }
-            40% { transform: scaleX(1.3) translateX(25px); }
-            100% { transform: scaleX(0.5) translateX(0); }
-        }
-        @keyframes catSwatLeft {
-            0% { transform: scaleX(0.5) translateX(0); }
-            40% { transform: scaleX(1.3) translateX(-25px); }
-            100% { transform: scaleX(0.5) translateX(0); }
-        }
-
-        /* ============ DOG ============ */
-        .dog-container {
-            width: 90px;
-            height: 90px;
-        }
-
-        .dog-body {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 55px;
-            height: 38px;
-            background: linear-gradient(180deg, #d4a574, #b8956c);
-            border-radius: 28px 28px 20px 20px;
-        }
-
-        .dog-head {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 48px;
-            height: 42px;
-            background: linear-gradient(180deg, #d4a574, #b8956c);
-            border-radius: 24px 24px 20px 20px;
-            z-index: 2;
-        }
-
-        .dog-ear {
-            position: absolute;
-            top: 5px;
-            width: 16px;
-            height: 28px;
-            background: linear-gradient(180deg, #8b6914, #6b5010);
-            border-radius: 8px 8px 12px 12px;
-        }
+        /* Dog */
+        .dog-container { width: 90px; height: 90px; }
+        .dog-body { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 55px; height: 38px; border-radius: 28px 28px 20px 20px; }
+        .dog-head { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 48px; height: 42px; border-radius: 24px 24px 20px 20px; z-index: 2; }
+        .dog-ear { position: absolute; top: 5px; width: 16px; height: 28px; border-radius: 8px 8px 12px 12px; }
         .dog-ear.left { left: -6px; transform: rotate(-10deg); }
         .dog-ear.right { right: -6px; transform: rotate(10deg); }
+        .dog-eyes { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; }
+        .dog-eye { width: 9px; height: 9px; border-radius: 50%; }
+        .dog-container.happy .dog-eye { height: 5px; border-radius: 5px 5px 50% 50%; }
+        .dog-snout { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 28px; height: 20px; background: #fef3c7; border-radius: 50%; }
+        .dog-nose { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 12px; height: 9px; background: #333; border-radius: 50% 50% 45% 45%; }
+        .dog-tongue { position: absolute; top: 32px; left: 50%; transform: translateX(-50%); width: 10px; height: 0; border-radius: 5px; transition: height 0.2s; }
+        .dog-container.happy .dog-tongue { height: 14px; }
+        .dog-tail { position: absolute; bottom: 15px; right: -8px; width: 20px; height: 8px; background: #d4a574; border-radius: 10px; transform-origin: left center; animation: tailWag 0.15s ease-in-out infinite alternate; }
 
-        .dog-eyes {
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-        }
+        @keyframes tailWag { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+        .dog-container.bonking.from-left { animation: dogBonkLeft 0.4s ease-out forwards; }
+        .dog-container.bonking.from-right { animation: dogBonkRight 0.4s ease-out forwards; }
+        @keyframes dogBonkLeft { 0% { transform: translateX(0); } 35% { transform: translateX(30px); } 50% { transform: translateX(35px); } 100% { transform: translateX(0); } }
+        @keyframes dogBonkRight { 0% { transform: translateX(0); } 35% { transform: translateX(-30px); } 50% { transform: translateX(-35px); } 100% { transform: translateX(0); } }
 
-        .dog-eye {
-            width: 9px;
-            height: 9px;
-            background: #333;
-            border-radius: 50%;
-        }
-
-        .dog-container.happy .dog-eye {
-            height: 5px;
-            border-radius: 5px 5px 50% 50%;
-        }
-
-        .dog-snout {
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 28px;
-            height: 20px;
-            background: #f5dcc3;
-            border-radius: 50%;
-        }
-
-        .dog-nose {
-            position: absolute;
-            top: 22px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 9px;
-            background: #333;
-            border-radius: 50% 50% 45% 45%;
-        }
-
-        .dog-tongue {
-            position: absolute;
-            top: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10px;
-            height: 0;
-            background: #ff7b9c;
-            border-radius: 5px;
-            transition: height 0.2s;
-        }
-
-        .dog-container.happy .dog-tongue {
-            height: 14px;
-        }
-
-        .dog-tail {
-            position: absolute;
-            bottom: 15px;
-            right: -8px;
-            width: 20px;
-            height: 8px;
-            background: #d4a574;
-            border-radius: 10px;
-            transform-origin: left center;
-            animation: tailWag 0.15s ease-in-out infinite alternate;
-        }
-
-        @keyframes tailWag {
-            from { transform: rotate(-20deg); }
-            to { transform: rotate(20deg); }
-        }
-
-        .dog-container.bonking {
-            animation: dogBonk 0.4s ease-out forwards;
-        }
-
-        .dog-container.bonking.from-left {
-            animation: dogBonkLeft 0.4s ease-out forwards;
-        }
-
-        .dog-container.bonking.from-right {
-            animation: dogBonkRight 0.4s ease-out forwards;
-        }
-
-        @keyframes dogBonkLeft {
-            0% { transform: translateX(0); }
-            35% { transform: translateX(30px); }
-            50% { transform: translateX(35px); }
-            100% { transform: translateX(0); }
-        }
-
-        @keyframes dogBonkRight {
-            0% { transform: translateX(0); }
-            35% { transform: translateX(-30px); }
-            50% { transform: translateX(-35px); }
-            100% { transform: translateX(0); }
-        }
-
-        /* ============ BUNNY ============ */
-        .bunny-container {
-            width: 70px;
-            height: 100px;
-        }
-
-        .bunny-body {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 45px;
-            height: 40px;
-            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
-            border-radius: 50%;
-        }
-
-        .bunny-head {
-            position: absolute;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 38px;
-            height: 34px;
-            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .bunny-ear {
-            position: absolute;
-            top: -35px;
-            width: 14px;
-            height: 40px;
-            background: linear-gradient(180deg, #f5f5f5, #e8e8e8);
-            border-radius: 7px 7px 5px 5px;
-        }
+        /* Bunny */
+        .bunny-container { width: 70px; height: 100px; }
+        .bunny-body { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 45px; height: 40px; border-radius: 50%; }
+        .bunny-head { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); width: 38px; height: 34px; border-radius: 50%; z-index: 2; }
+        .bunny-ear { position: absolute; top: -35px; width: 14px; height: 40px; border-radius: 7px 7px 5px 5px; }
         .bunny-ear.left { left: 4px; transform: rotate(-10deg); }
         .bunny-ear.right { right: 4px; transform: rotate(10deg); }
-
-        .bunny-ear-inner {
-            position: absolute;
-            top: -30px;
-            width: 8px;
-            height: 28px;
-            background: #ffb5b5;
-            border-radius: 4px;
-        }
+        .bunny-ear-inner { position: absolute; top: -30px; width: 8px; height: 28px; background: #ffb5b5; border-radius: 4px; }
         .bunny-ear-inner.left { left: 7px; transform: rotate(-10deg); }
         .bunny-ear-inner.right { right: 7px; transform: rotate(10deg); }
-
-        .bunny-eyes {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .bunny-eye {
-            width: 8px;
-            height: 10px;
-            background: #ff6b8a;
-            border-radius: 50%;
-        }
-
-        .bunny-nose {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 6px;
-            background: #ffb5b5;
-            border-radius: 50%;
-        }
-
-        .bunny-cheek {
-            position: absolute;
-            top: 18px;
-            width: 10px;
-            height: 6px;
-            background: rgba(255, 182, 193, 0.5);
-            border-radius: 50%;
-        }
+        .bunny-eyes { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .bunny-eye { width: 8px; height: 10px; border-radius: 50%; }
+        .bunny-nose { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 8px; height: 6px; background: #ffb5b5; border-radius: 50%; }
+        .bunny-cheek { position: absolute; top: 18px; width: 10px; height: 6px; background: rgba(255, 182, 193, 0.5); border-radius: 50%; }
         .bunny-cheek.left { left: 2px; }
         .bunny-cheek.right { right: 2px; }
-
-        .bunny-foot {
-            position: absolute;
-            bottom: 5px;
-            width: 22px;
-            height: 12px;
-            background: #f5f5f5;
-            border-radius: 50%;
-        }
+        .bunny-foot { position: absolute; bottom: 5px; width: 22px; height: 12px; border-radius: 50%; }
         .bunny-foot.left { left: -5px; transform-origin: right center; }
         .bunny-foot.right { right: -5px; transform-origin: left center; }
+        .bunny-container.kicking .bunny-foot.left { animation: bunnyKickLeft 0.35s ease-out forwards; }
+        .bunny-container.kicking .bunny-foot.right { animation: bunnyKickRight 0.35s ease-out forwards; }
+        .bunny-container.kicking { animation: bunnyHop 0.35s ease-out; }
 
-        .bunny-container.kicking .bunny-foot.left {
-            animation: bunnyKickLeft 0.35s ease-out forwards;
-        }
-        .bunny-container.kicking .bunny-foot.right {
-            animation: bunnyKickRight 0.35s ease-out forwards;
-        }
+        @keyframes bunnyKickLeft { 0% { transform: rotate(0) translateX(0); } 40% { transform: rotate(-30deg) translateX(-20px); } 100% { transform: rotate(0) translateX(0); } }
+        @keyframes bunnyKickRight { 0% { transform: rotate(0) translateX(0); } 40% { transform: rotate(30deg) translateX(20px); } 100% { transform: rotate(0) translateX(0); } }
+        @keyframes bunnyHop { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-15px); } }
 
-        @keyframes bunnyKickLeft {
-            0% { transform: rotate(0) translateX(0); }
-            40% { transform: rotate(-30deg) translateX(-20px); }
-            100% { transform: rotate(0) translateX(0); }
-        }
-        @keyframes bunnyKickRight {
-            0% { transform: rotate(0) translateX(0); }
-            40% { transform: rotate(30deg) translateX(20px); }
-            100% { transform: rotate(0) translateX(0); }
-        }
-
-        .bunny-container.kicking {
-            animation: bunnyHop 0.35s ease-out;
-        }
-
-        @keyframes bunnyHop {
-            0%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-15px); }
-        }
-
-        /* ============ BIRD ============ */
-        .bird-container {
-            width: 60px;
-            height: 70px;
-        }
-
-        .bird-body {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 35px;
-            background: linear-gradient(180deg, #ff6b6b, #ee5a5a);
-            border-radius: 50% 50% 45% 45%;
-        }
-
-        .bird-head {
-            position: absolute;
-            bottom: 35px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 28px;
-            background: linear-gradient(180deg, #ff6b6b, #ee5a5a);
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .bird-eye {
-            position: absolute;
-            top: 8px;
-            width: 8px;
-            height: 8px;
-            background: #333;
-            border-radius: 50%;
-        }
+        /* Bird */
+        .bird-container { width: 60px; height: 70px; }
+        .bird-body { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 40px; height: 35px; border-radius: 50% 50% 45% 45%; }
+        .bird-head { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); width: 30px; height: 28px; border-radius: 50%; z-index: 2; }
+        .bird-eye { position: absolute; top: 8px; width: 8px; height: 8px; background: #333; border-radius: 50%; }
         .bird-eye.left { left: 4px; }
         .bird-eye.right { right: 4px; }
-
-        .bird-eye::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        .bird-beak {
-            position: absolute;
-            top: 14px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 10px solid #ffa500;
-        }
-
-        .bird-wing {
-            position: absolute;
-            bottom: 15px;
-            width: 18px;
-            height: 25px;
-            background: linear-gradient(180deg, #ff8585, #ee5a5a);
-            border-radius: 50% 50% 30% 30%;
-        }
+        .bird-eye::after { content: ''; position: absolute; top: 2px; left: 2px; width: 3px; height: 3px; background: white; border-radius: 50%; }
+        .bird-beak { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #ffa500; }
+        .bird-wing { position: absolute; bottom: 15px; width: 18px; height: 25px; border-radius: 50% 50% 30% 30%; }
         .bird-wing.left { left: -5px; transform: rotate(20deg); }
         .bird-wing.right { right: -5px; transform: rotate(-20deg); }
+        .bird-tail { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 20px; height: 15px; background: inherit; border-radius: 5px 5px 50% 50%; }
+        .bird-legs { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+        .bird-leg { width: 3px; height: 10px; background: #ffa500; }
+        .bird-container.pecking.from-left { animation: birdPeckLeft 0.3s ease-out forwards; }
+        .bird-container.pecking.from-right { animation: birdPeckRight 0.3s ease-out forwards; }
 
-        .bird-tail {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 15px;
-            background: linear-gradient(180deg, #ff8585, #ee5a5a);
-            border-radius: 5px 5px 50% 50%;
-        }
+        @keyframes birdPeckLeft { 0% { transform: rotate(0); } 40% { transform: rotate(25deg) translateX(10px); } 60% { transform: rotate(25deg) translateX(10px); } 100% { transform: rotate(0); } }
+        @keyframes birdPeckRight { 0% { transform: rotate(0); } 40% { transform: rotate(-25deg) translateX(-10px); } 60% { transform: rotate(-25deg) translateX(-10px); } 100% { transform: rotate(0); } }
 
-        .bird-legs {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-        }
-
-        .bird-leg {
-            width: 3px;
-            height: 10px;
-            background: #ffa500;
-        }
-
-        .bird-container.pecking {
-            animation: birdPeck 0.3s ease-out forwards;
-        }
-
-        .bird-container.pecking.from-left {
-            transform-origin: bottom left;
-            animation: birdPeckLeft 0.3s ease-out forwards;
-        }
-
-        .bird-container.pecking.from-right {
-            transform-origin: bottom right;
-            animation: birdPeckRight 0.3s ease-out forwards;
-        }
-
-        @keyframes birdPeckLeft {
-            0% { transform: rotate(0); }
-            40% { transform: rotate(25deg) translateX(10px); }
-            60% { transform: rotate(25deg) translateX(10px); }
-            100% { transform: rotate(0); }
-        }
-
-        @keyframes birdPeckRight {
-            0% { transform: rotate(0); }
-            40% { transform: rotate(-25deg) translateX(-10px); }
-            60% { transform: rotate(-25deg) translateX(-10px); }
-            100% { transform: rotate(0); }
-        }
-
-        /* ============ SUCCESS OVERLAY ============ */
+        /* Success */
         .success-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(254, 241, 243, 0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -766,33 +808,34 @@
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s;
+            transition: opacity 0.5s, background 0.5s;
         }
 
-        .success-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
+        .success-overlay.active { opacity: 1; pointer-events: all; }
 
         .success-text {
-            font-family: 'Caveat', cursive;
-            font-size: 3.5rem;
-            color: var(--red-heart);
             text-align: center;
             animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .success-subtext {
-            font-size: 1.4rem;
-            color: var(--brown-warm);
             margin-top: 1rem;
             animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
         }
 
-        @keyframes successPop {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        .success-code {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--n-card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--n-card-border);
+            font-family: 'Fira Code', monospace;
+            color: var(--n-text);
+            animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
         }
+
+        @keyframes successPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .confetti {
             position: fixed;
@@ -800,59 +843,90 @@
             animation: confettiFall linear forwards;
         }
 
-        @keyframes confettiFall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        .big-heart {
-            position: fixed;
-            font-size: 5rem;
-            color: var(--red-heart);
-            z-index: 1002;
-            animation: bigHeartFloat 2s ease-out forwards;
-            pointer-events: none;
-        }
-
-        @keyframes bigHeartFloat {
-            0% { transform: scale(0) rotate(0deg); opacity: 1; }
-            50% { opacity: 1; }
-            100% { transform: scale(1.5) rotate(15deg) translateY(-200px); opacity: 0; }
-        }
+        @keyframes confettiFall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 
         .attempt-counter {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            font-family: 'Caveat', cursive;
-            font-size: 1.2rem;
-            color: var(--pink-deep);
-            opacity: 0.7;
         }
 
-        @media (max-width: 500px) {
-            .card { padding: 2rem; margin: 1rem; }
-            .question { font-size: 2.2rem; }
-            .success-text { font-size: 2.5rem; }
+        @media (max-width: 600px) {
+            .card { margin: 1rem; }
+            .terminal-content { padding: 1rem; }
+            body.valentine .terminal-content { padding: 1.5rem; }
+            body.valentine .question-text { font-size: 2.2rem; }
+            .buttons { flex-direction: column; align-items: flex-start; }
+            body.valentine .buttons { align-items: center; }
+            .theme-toggle { top: 10px; right: 10px; padding: 6px 12px; }
         }
     </style>
 </head>
-<body>
-    <div class="hearts-bg" id="heartsBg"></div>
+<body class="valentine">
+    <div class="floating-bg" id="floatingBg"></div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="toggle-icon">💕</span>
+        <div class="toggle-switch"></div>
+        <span class="toggle-icon">👨‍💻</span>
+    </div>
 
     <div class="container">
         <div class="card">
-            <h1 class="question">Will you be my Valentine?</h1>
-            <p class="sub-text">Pretty please? 🥺</p>
-            <div class="buttons">
-                <button class="btn btn-yes" onclick="sayYes()">Yes! 💕</button>
+            <div class="terminal-header">
+                <div class="terminal-btn red"></div>
+                <div class="terminal-btn yellow"></div>
+                <div class="terminal-btn green"></div>
+                <span class="terminal-title">Valentine.tsx — src/components</span>
+            </div>
+            <div class="terminal-content">
+                <!-- Valentine Display -->
+                <div class="valentine-display">
+                    <h1 class="question-text">Will you be my Valentine?</h1>
+                    <p class="sub-text">Pretty please? 🥺</p>
+                </div>
+
+                <!-- Code Display (Nerd) -->
+                <div class="code-display">
+                    <div class="code-line">
+                        <span class="line-number">1</span>
+                        <span class="keyword">const</span> <span class="function">Valentine</span> <span class="operator">=</span> <span class="operator">() =></span> <span class="operator">{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">2</span>
+                        &nbsp;&nbsp;<span class="keyword">const</span> <span class="operator">[</span><span class="variable">love</span><span class="operator">,</span> <span class="variable">setLove</span><span class="operator">]</span> <span class="operator">=</span> <span class="function">useState</span><span class="operator">(</span><span class="string">"yours"</span><span class="operator">);</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">3</span>
+                    </div>
+                    <div class="code-line question-line">
+                        <span class="line-number">4</span>
+                        &nbsp;&nbsp;<span class="keyword">return</span> <span class="operator">&lt;</span><span class="function">BeMyValentine</span> <span class="variable">please</span> <span class="operator">/></span> <span class="heart-icon">❤️</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">5</span>
+                        <span class="operator">}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">6</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">7</span>
+                        <span class="comment">// awaiting your response...</span><span class="cursor"></span>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-yes" onclick="sayYes()"><span class="btn-yes-text"></span></button>
+                </div>
             </div>
         </div>
     </div>
 
-    <button class="btn btn-no" id="noBtn">No</button>
+    <button class="btn btn-no" id="noBtn"><span class="btn-no-text"></span></button>
 
-    <!-- CAT -->
+    <!-- Animals -->
     <div class="animal-container cat-container" id="cat">
         <div class="speech-bubble"></div>
         <div class="cat-body"></div>
@@ -863,16 +937,12 @@
             <div class="cat-ear right"></div>
             <div class="cat-ear-inner left"></div>
             <div class="cat-ear-inner right"></div>
-            <div class="cat-eyes">
-                <div class="cat-eye"></div>
-                <div class="cat-eye"></div>
-            </div>
+            <div class="cat-eyes"><div class="cat-eye"></div><div class="cat-eye"></div></div>
             <div class="cat-nose"></div>
             <div class="cat-mouth"></div>
         </div>
     </div>
 
-    <!-- DOG -->
     <div class="animal-container dog-container" id="dog">
         <div class="speech-bubble"></div>
         <div class="dog-body"></div>
@@ -880,17 +950,13 @@
         <div class="dog-head">
             <div class="dog-ear left"></div>
             <div class="dog-ear right"></div>
-            <div class="dog-eyes">
-                <div class="dog-eye"></div>
-                <div class="dog-eye"></div>
-            </div>
+            <div class="dog-eyes"><div class="dog-eye"></div><div class="dog-eye"></div></div>
             <div class="dog-snout"></div>
             <div class="dog-nose"></div>
             <div class="dog-tongue"></div>
         </div>
     </div>
 
-    <!-- BUNNY -->
     <div class="animal-container bunny-container" id="bunny">
         <div class="speech-bubble"></div>
         <div class="bunny-body"></div>
@@ -901,17 +967,13 @@
             <div class="bunny-ear right"></div>
             <div class="bunny-ear-inner left"></div>
             <div class="bunny-ear-inner right"></div>
-            <div class="bunny-eyes">
-                <div class="bunny-eye"></div>
-                <div class="bunny-eye"></div>
-            </div>
+            <div class="bunny-eyes"><div class="bunny-eye"></div><div class="bunny-eye"></div></div>
             <div class="bunny-cheek left"></div>
             <div class="bunny-cheek right"></div>
             <div class="bunny-nose"></div>
         </div>
     </div>
 
-    <!-- BIRD -->
     <div class="animal-container bird-container" id="bird">
         <div class="speech-bubble"></div>
         <div class="bird-body"></div>
@@ -923,48 +985,43 @@
             <div class="bird-eye right"></div>
             <div class="bird-beak"></div>
         </div>
-        <div class="bird-legs">
-            <div class="bird-leg"></div>
-            <div class="bird-leg"></div>
-        </div>
+        <div class="bird-legs"><div class="bird-leg"></div><div class="bird-leg"></div></div>
     </div>
 
     <div class="success-overlay" id="successOverlay">
-        <div class="success-text">Yay! I knew you'd say yes! 💖</div>
-        <div class="success-subtext">Happy Valentine's Day, my love!</div>
+        <div class="success-text"></div>
+        <div class="success-subtext"></div>
+        <div class="success-code">
+            <span class="keyword">export default</span> <span class="operator">&lt;</span><span class="function">Together</span> <span class="variable">forever</span> <span class="operator">/></span> <span class="heart-icon">❤️</span>
+        </div>
     </div>
 
     <div class="attempt-counter" id="attemptCounter"></div>
 
     <script>
+        let currentTheme = 'valentine';
         const noBtn = document.getElementById('noBtn');
         const attemptCounter = document.getElementById('attemptCounter');
 
+        const valentinePhrases = {
+            cat: ["Nope!", "*swat*", "Hehe! 😼", "Try again!", "My paw says no!"],
+            dog: ["Boop!", "Woof! 🐕", "Nuh-uh!", "*bonk*", "Good try!"],
+            bunny: ["*kick*", "Nope! 🐰", "Hop away!", "Not today!", "Boing!"],
+            bird: ["*peck*", "Chirp! 🐦", "Tweet NO!", "Fly away!", "Nope nope!"]
+        };
+
+        const nerdPhrases = {
+            cat: ["return null", "useState(no)", "<Rejected />", "throw new Error", "undefined"],
+            dog: ["useFetch()", "useWoof()", "<GoodBoy />", "props.treat", "onClick=bark"],
+            bunny: ["useHop()", "<Bounce />", "key={carrot}", "npm run hop", "React.kick()"],
+            bird: ["<Tweet />", "useEffect", "onClick={fly}", "npm run peck", "props.wings"]
+        };
+
         const animals = {
-            cat: {
-                el: document.getElementById('cat'),
-                phrases: ["Nope!", "*swat*", "Hehe! 😼", "Try again!", "My paw says no!"],
-                width: 80,
-                height: 95
-            },
-            dog: {
-                el: document.getElementById('dog'),
-                phrases: ["Boop!", "Woof! 🐕", "Nuh-uh!", "*bonk*", "Good try!"],
-                width: 90,
-                height: 90
-            },
-            bunny: {
-                el: document.getElementById('bunny'),
-                phrases: ["*kick*", "Nope! 🐰", "Hop away!", "Not today!", "Boing!"],
-                width: 70,
-                height: 100
-            },
-            bird: {
-                el: document.getElementById('bird'),
-                phrases: ["*peck*", "Chirp! 🐦", "Tweet NO!", "Fly away!", "Nope nope!"],
-                width: 60,
-                height: 70
-            }
+            cat: { el: document.getElementById('cat'), width: 80, height: 95 },
+            dog: { el: document.getElementById('dog'), width: 90, height: 90 },
+            bunny: { el: document.getElementById('bunny'), width: 70, height: 100 },
+            bird: { el: document.getElementById('bird'), width: 60, height: 70 }
         };
 
         let attempts = 0;
@@ -972,51 +1029,54 @@
         let currentX, currentY;
         let lastAnimal = null;
 
+        const heartItems = ['♥', '♡', '❤', '💕', '💗'];
+        const codeItems = ['<Love />', '❤️', 'useState(you)', 'useEffect(() => love())', 'import Heart', 'const [love] = useState(true)', 'useMemo(() => us)', 'props.heart', '{hearts.map(h => ❤️)}', 'useCallback(kiss)', '♥', '<Heart beat />', 'useContext(Love)', 'export default You', 'npm i @love/you', 'React.createElement(Us)', '<Forever together />', 'useReducer(love)', 'createContext(💕)'];
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'valentine' ? 'nerd' : 'valentine';
+            document.body.className = currentTheme;
+            document.title = currentTheme === 'valentine' ? 'Will you be my Valentine?' : '// TODO: Ask important question';
+        }
+
+        function createFloatingItems() {
+            const bg = document.getElementById('floatingBg');
+            const colors = ['', 'pink', 'blue', 'yellow'];
+
+            function addItem() {
+                const item = document.createElement('div');
+                const isHeart = Math.random() > 0.5;
+
+                item.className = 'floating-item ' + (isHeart ? 'heart' : 'code ' + colors[Math.floor(Math.random() * colors.length)]);
+                item.textContent = isHeart ?
+                    heartItems[Math.floor(Math.random() * heartItems.length)] :
+                    codeItems[Math.floor(Math.random() * codeItems.length)];
+                item.style.left = Math.random() * 100 + 'vw';
+                item.style.animationDuration = (Math.random() * 12 + 10) + 's';
+
+                bg.appendChild(item);
+                setTimeout(() => item.remove(), 22000);
+            }
+
+            for (let i = 0; i < 12; i++) {
+                setTimeout(addItem, i * 800);
+            }
+            setInterval(addItem, 2500);
+        }
+
         function initButtonPosition() {
             const yesBtn = document.querySelector('.btn-yes');
             const yesBtnRect = yesBtn.getBoundingClientRect();
-            currentX = yesBtnRect.right + 30;
+            currentX = yesBtnRect.right + 20;
             currentY = yesBtnRect.top;
             noBtn.style.left = currentX + 'px';
             noBtn.style.top = currentY + 'px';
         }
 
-        function createFloatingHearts() {
-            const heartsBg = document.getElementById('heartsBg');
-            const hearts = ['♥', '♡', '❤', '💕', '💗'];
-
-            for (let i = 0; i < 12; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'floating-heart';
-                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                    heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                    heart.style.animationDelay = (Math.random() * 5) + 's';
-                    heartsBg.appendChild(heart);
-                    setTimeout(() => heart.remove(), 20000);
-                }, i * 700);
-            }
-
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'floating-heart';
-                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                heartsBg.appendChild(heart);
-                setTimeout(() => heart.remove(), 20000);
-            }, 3000);
-        }
-
         function getRandomAnimal() {
-            const animalKeys = Object.keys(animals);
+            const keys = Object.keys(animals);
             let choice;
-            do {
-                choice = animalKeys[Math.floor(Math.random() * animalKeys.length)];
-            } while (choice === lastAnimal && animalKeys.length > 1);
+            do { choice = keys[Math.floor(Math.random() * keys.length)]; }
+            while (choice === lastAnimal && keys.length > 1);
             lastAnimal = choice;
             return choice;
         }
@@ -1031,137 +1091,129 @@
             const animal = animals[animalType];
             const animalEl = animal.el;
             const speechBubble = animalEl.querySelector('.speech-bubble');
+            const phrases = currentTheme === 'valentine' ? valentinePhrases : nerdPhrases;
 
-            // Random direction
-            const pushToRight = Math.random() > 0.5;
+            // Determine push direction based on where there's more space
+            const spaceOnRight = window.innerWidth - btnRect.right;
+            const spaceOnLeft = btnRect.left;
+            const pushToRight = spaceOnRight > spaceOnLeft;
 
-            // Position animal next to button
+            // Calculate animal position next to button
             let animalX, animalY;
+            const animalHeight = animalType === 'bunny' ? 100 : animalType === 'cat' ? 95 : animalType === 'dog' ? 90 : 70;
 
-            if (animalType === 'cat') {
-                animalX = pushToRight ? btnRect.left - 55 : btnRect.right - 25;
-                animalY = btnRect.top - 20;
-            } else if (animalType === 'dog') {
-                animalX = pushToRight ? btnRect.left - 65 : btnRect.right - 25;
-                animalY = btnRect.top - 15;
-            } else if (animalType === 'bunny') {
-                animalX = pushToRight ? btnRect.left - 50 : btnRect.right - 20;
-                animalY = btnRect.top - 25;
-            } else if (animalType === 'bird') {
-                animalX = pushToRight ? btnRect.left - 45 : btnRect.right - 15;
-                animalY = btnRect.top - 20;
-            }
+            if (animalType === 'cat') { animalX = pushToRight ? btnRect.left - 55 : btnRect.right - 25; animalY = btnRect.top - 20; }
+            else if (animalType === 'dog') { animalX = pushToRight ? btnRect.left - 65 : btnRect.right - 25; animalY = btnRect.top - 15; }
+            else if (animalType === 'bunny') { animalX = pushToRight ? btnRect.left - 50 : btnRect.right - 20; animalY = btnRect.top - 25; }
+            else if (animalType === 'bird') { animalX = pushToRight ? btnRect.left - 45 : btnRect.right - 15; animalY = btnRect.top - 20; }
+
+            // Keep animal and speech bubble within viewport (speech bubble needs ~45px above animal)
+            const minTop = 50;
+            const maxTop = window.innerHeight - animalHeight - 20;
+            const minLeft = 10;
+            const maxLeft = window.innerWidth - 100;
+
+            animalX = Math.max(minLeft, Math.min(maxLeft, animalX));
+            animalY = Math.max(minTop, Math.min(maxTop, animalY));
 
             animalEl.style.left = animalX + 'px';
             animalEl.style.top = animalY + 'px';
-
-            // Show animal
             animalEl.classList.add('visible');
-
-            // Set direction class
             animalEl.classList.remove('from-left', 'from-right');
             animalEl.classList.add(pushToRight ? 'from-left' : 'from-right');
 
-            // Configure paws/direction for cat
             if (animalType === 'cat') {
-                const leftPaw = animalEl.querySelector('.cat-paw.left');
-                const rightPaw = animalEl.querySelector('.cat-paw.right');
-                if (pushToRight) {
-                    rightPaw.style.display = 'block';
-                    leftPaw.style.display = 'none';
-                } else {
-                    leftPaw.style.display = 'block';
-                    rightPaw.style.display = 'none';
-                }
+                animalEl.querySelector('.cat-paw.right').style.display = pushToRight ? 'block' : 'none';
+                animalEl.querySelector('.cat-paw.left').style.display = pushToRight ? 'none' : 'block';
             }
-
-            // Configure feet for bunny
             if (animalType === 'bunny') {
-                const leftFoot = animalEl.querySelector('.bunny-foot.left');
-                const rightFoot = animalEl.querySelector('.bunny-foot.right');
-                if (pushToRight) {
-                    rightFoot.style.display = 'block';
-                    leftFoot.style.display = 'none';
-                } else {
-                    leftFoot.style.display = 'block';
-                    rightFoot.style.display = 'none';
-                }
+                animalEl.querySelector('.bunny-foot.right').style.display = pushToRight ? 'block' : 'none';
+                animalEl.querySelector('.bunny-foot.left').style.display = pushToRight ? 'none' : 'block';
             }
 
-            // Start animation after brief appearance
             setTimeout(() => {
-                // Add action class based on animal
-                if (animalType === 'cat') {
-                    animalEl.classList.add('swatting', 'smug');
-                } else if (animalType === 'dog') {
-                    animalEl.classList.add('bonking', 'happy');
-                } else if (animalType === 'bunny') {
-                    animalEl.classList.add('kicking');
-                } else if (animalType === 'bird') {
-                    animalEl.classList.add('pecking');
-                }
+                if (animalType === 'cat') animalEl.classList.add('swatting', 'smug');
+                else if (animalType === 'dog') animalEl.classList.add('bonking', 'happy');
+                else if (animalType === 'bunny') animalEl.classList.add('kicking');
+                else if (animalType === 'bird') animalEl.classList.add('pecking');
 
-                // Show speech bubble
                 animalEl.classList.add('speaking');
-                speechBubble.textContent = animal.phrases[Math.floor(Math.random() * animal.phrases.length)];
+                speechBubble.textContent = phrases[animalType][Math.floor(Math.random() * phrases[animalType].length)];
             }, 80);
 
-            // Move button when animal "hits" it
             setTimeout(() => {
-                const minDistance = 200;
-                const maxDistance = 400;
-                const distance = minDistance + Math.random() * (maxDistance - minDistance);
-
-                const horizontalPush = pushToRight ? distance : -distance;
-                const verticalPush = (Math.random() - 0.5) * 350;
-
-                let newX = currentX + horizontalPush;
-                let newY = currentY + verticalPush;
-
-                const padding = 30;
-                newX = Math.max(padding, Math.min(window.innerWidth - btnRect.width - padding, newX));
-                newY = Math.max(padding, Math.min(window.innerHeight - btnRect.height - padding, newY));
-
-                // Avoid Yes button
+                const padding = 40;
+                const minMoveDistance = 180; // Minimum distance the button MUST move
                 const yesBtn = document.querySelector('.btn-yes');
                 const yesBtnRect = yesBtn.getBoundingClientRect();
-                if (newX > yesBtnRect.left - 60 && newX < yesBtnRect.right + 60 &&
-                    newY > yesBtnRect.top - 60 && newY < yesBtnRect.bottom + 60) {
-                    if (pushToRight) {
-                        newX = yesBtnRect.right + 70;
-                    } else {
-                        newX = yesBtnRect.left - btnRect.width - 70;
+
+                let newX, newY;
+                let validPosition = false;
+                let tries = 0;
+
+                // Keep trying until we find a position that's far enough away
+                while (!validPosition && tries < 20) {
+                    tries++;
+
+                    // Calculate target distance (250-450px)
+                    const distance = 250 + Math.random() * 200;
+
+                    // Primary direction based on available space, with some vertical variation
+                    const horizontalPush = pushToRight ? distance : -distance;
+                    const verticalPush = (Math.random() - 0.5) * 400;
+
+                    newX = currentX + horizontalPush;
+                    newY = currentY + verticalPush;
+
+                    // If we hit the edge, try the opposite direction or different angle
+                    if (tries > 5) {
+                        const angle = Math.random() * Math.PI * 2;
+                        newX = currentX + Math.cos(angle) * distance;
+                        newY = currentY + Math.sin(angle) * distance;
                     }
+
+                    // Clamp to viewport
                     newX = Math.max(padding, Math.min(window.innerWidth - btnRect.width - padding, newX));
+                    newY = Math.max(padding, Math.min(window.innerHeight - btnRect.height - padding, newY));
+
+                    // Avoid Yes button area
+                    const inYesZone = newX > yesBtnRect.left - 70 && newX < yesBtnRect.right + 70 &&
+                                      newY > yesBtnRect.top - 70 && newY < yesBtnRect.bottom + 70;
+
+                    if (inYesZone) {
+                        // Move to opposite side or corners
+                        if (newX < window.innerWidth / 2) {
+                            newX = window.innerWidth - btnRect.width - padding - Math.random() * 100;
+                        } else {
+                            newX = padding + Math.random() * 100;
+                        }
+                        newY = Math.random() > 0.5 ? padding + Math.random() * 100 : window.innerHeight - btnRect.height - padding - Math.random() * 100;
+                    }
+
+                    // Check if we moved far enough
+                    const actualDistance = Math.sqrt(Math.pow(newX - currentX, 2) + Math.pow(newY - currentY, 2));
+                    validPosition = actualDistance >= minMoveDistance;
                 }
 
                 currentX = newX;
                 currentY = newY;
-
                 noBtn.classList.add('flying');
                 noBtn.style.left = newX + 'px';
                 noBtn.style.top = newY + 'px';
-                noBtn.style.transform = `rotate(${(pushToRight ? 1 : -1) * (Math.random() * 25 + 5)}deg)`;
+                noBtn.style.transform = `rotate(${(pushToRight ? 1 : -1) * (Math.random() * 30 + 10)}deg)`;
             }, 180);
 
             if (attempts > 2) {
-                attemptCounter.textContent = `Attempts to say no: ${attempts} 😅`;
+                attemptCounter.textContent = attempts;
+                attemptCounter.style.display = 'block';
             }
 
-            // Cleanup
             setTimeout(() => {
                 animalEl.classList.remove('swatting', 'smug', 'bonking', 'happy', 'kicking', 'pecking');
                 noBtn.classList.remove('flying');
             }, 450);
-
-            setTimeout(() => {
-                animalEl.classList.remove('speaking');
-            }, 900);
-
-            setTimeout(() => {
-                animalEl.classList.remove('visible', 'from-left', 'from-right');
-                isAnimating = false;
-            }, 1000);
+            setTimeout(() => animalEl.classList.remove('speaking'), 900);
+            setTimeout(() => { animalEl.classList.remove('visible', 'from-left', 'from-right'); isAnimating = false; }, 1000);
         }
 
         noBtn.addEventListener('mouseenter', moveNoButton);
@@ -1169,42 +1221,31 @@
         noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNoButton(); });
 
         function sayYes() {
-            const overlay = document.getElementById('successOverlay');
-            overlay.classList.add('active');
+            document.getElementById('successOverlay').classList.add('active');
 
-            const colors = ['#ff8fab', '#e63946', '#ffc2d1', '#ff6b6b', '#ffb347', '#ffd700'];
-            for (let i = 0; i < 100; i++) {
+            const isValentine = currentTheme === 'valentine';
+            const confettiItems = isValentine ? ['❤️', '💕', '💖', '♥', '💗', '✨'] : ['❤️', '💕', '✓', '1', '0', '♥', '<3', ':)', '++'];
+            const colors = isValentine ? ['#ff8fab', '#e63946', '#ffc2d1', '#ff6b6b', '#ffb347'] : ['#f5c2e7', '#a6e3a1', '#89b4fa', '#f9e2af', '#f38ba8', '#cba6f7'];
+
+            for (let i = 0; i < 80; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
+                    confetti.textContent = confettiItems[Math.floor(Math.random() * confettiItems.length)];
                     confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                    confetti.style.width = (Math.random() * 10 + 8) + 'px';
-                    confetti.style.height = (Math.random() * 10 + 8) + 'px';
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
                     confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
                     document.body.appendChild(confetti);
                     setTimeout(() => confetti.remove(), 4000);
-                }, i * 30);
-            }
-
-            for (let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'big-heart';
-                    heart.textContent = '❤️';
-                    heart.style.left = Math.random() * 80 + 10 + 'vw';
-                    heart.style.top = Math.random() * 50 + 30 + 'vh';
-                    heart.style.fontSize = (Math.random() * 3 + 3) + 'rem';
-                    document.body.appendChild(heart);
-                    setTimeout(() => heart.remove(), 2500);
-                }, i * 150);
+                }, i * 40);
             }
         }
 
         window.addEventListener('load', () => {
             initButtonPosition();
-            createFloatingHearts();
+            createFloatingItems();
+            attemptCounter.style.display = 'none';
         });
         window.addEventListener('resize', initButtonPosition);
     </script>
